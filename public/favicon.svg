@@ -1,4 +1,29 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
-  <rect width="64" height="64" rx="16" fill="#063d78"/>
-  <path d="M17 15h20c8 0 13 4 13 11 0 4-2 7-6 9 5 1 8 5 8 11 0 8-6 13-16 13H17V15Zm11 9v8h8c3 0 5-2 5-4s-2-4-5-4h-8Zm0 17v9h9c4 0 6-2 6-5 0-2-2-4-6-4h-9Z" fill="#fff4d8"/>
+<svg xmlns="http://www.w3.org/2000/svg" width="1254" height="1254" viewBox="0 0 1254 1254">
+  <defs>
+    <radialGradient id="yellow" cx="50%" cy="48%" r="72%">
+      <stop offset="0%" stop-color="#FFD20A"/>
+      <stop offset="72%" stop-color="#FCCE05"/>
+      <stop offset="100%" stop-color="#FBCB03"/>
+    </radialGradient>
+  </defs>
+
+  <!-- White background -->
+  <rect width="1254" height="1254" fill="#FFFFFF"/>
+
+  <!-- Yellow circular field -->
+  <circle cx="627" cy="619" r="620" fill="url(#yellow)"/>
+
+  <!-- White Y-shaped cutout -->
+  <path
+    d="M 207 257
+       L 411 257
+       L 627 545
+       L 839 257
+       L 1044 257
+       L 722 700
+       L 722 1079
+       L 528 1079
+       L 528 700
+       Z"
+    fill="#FFFFFF"/>
 </svg>

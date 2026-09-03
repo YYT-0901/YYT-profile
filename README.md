@@ -1,6 +1,6 @@
 # 3D个人作品集网站
 
-这是一个使用 Vue 3、Vite 和 Three.js 制作的单页作品集网站，包含滚动驱动的 3D 首页、个人简介、作品分类、分页和作品详情抽屉。
+这是一个使用 Vue 3、Vite 和 Three.js 制作的单页作品集网站，包含滚动驱动的 3D 首页、个人简介、Github仓库获取、Dev Community博客获取，分类和分页实现。
 
 ## 环境要求
 
@@ -150,15 +150,20 @@ npx wrangler pages deploy dist --project-name=my-portfolio --branch=preview
 ```js
 export const profile = {
   image: '/assets/avatar.jpg',
-  name: 'Shearmine',
-  role: 'Director',
+  name: 'Yi Txuan',
+  role: 'Java Developer',
   location: 'Kuala Lumpur, Malaysia',
-  email: 'name@example.com',
-  phone: '+6012-3456789',
+  email: 'yitxuanyou506',
+  phone: '+6016-4197498',
   availability: 'Available for selected productions',
-  intro: 'Short introduction.',
-  approach: 'Creative approach and experience.',
-  disciplines: ['Producer', 'Director', 'Scriptwriter', 'Sound Mixer'],
+  intro:
+    'a Computer Science and Technology student at Beijing Institute of Technology.',
+  approach:
+    'I’m passionate about technology and enjoy exploring new ideas in computer science. Outside of my studies, I love singing and playing badminton, which help me relax and stay active.',
+  disciplines: ['Java', 'Spring Boot & Spring Cloud', 'MySQL & Redis', 'HTML + CSS + JavaScript'],
+  githubUsername: 'YYT-0901',
+  devCommunityUsername: 'yyt0901',
+  resume: '/assets/resume/resume.pdf',
 }
 ```
 
@@ -166,6 +171,9 @@ export const profile = {
 
 1. 直接替换 `public/assets/avatar.jpg`，保持文件名不变。
 2. 把新图片放进 `public/assets/`，再修改 `profile.image`，例如 `/assets/new-avatar.webp`。
+
+简历上传：
+1. 把简历放进 `public/assets/`，再修改 `profile.resume`，例如 `/assets/resume.pdf`。
 
 ## 修改网站文案
 
@@ -177,120 +185,6 @@ export const profile = {
 - `about`：个人简介区标题和提示文字。
 - `projectCard`：作品详情标签、按钮文字和默认值。
 - `footer`：页脚版权和返回顶部文字。
-
-首页最上方的主标题目前直接写在 `src/components/HeroScene.vue`，需要在该组件中修改：
-
-```html
-<p>Selected films · 2023—2026</p>
-<h1 class="sr-only">Film director portfolio</h1>
-<strong>Shearmine</strong>
-```
-
-## 新增或修改作品
-
-作品会自动从 `src/data/projects/` 读取，不需要手动维护 JavaScript 数组。
-
-### 1. 准备图片
-
-把封面放到：
-
-```text
-public/assets/projects/my-project.jpg
-```
-
-网页中的路径写成：
-
-```text
-/assets/projects/my-project.jpg
-```
-
-### 2. 新增 Markdown 文件
-
-在 `src/data/projects/` 新建文件，例如：
-
-```text
-48-my-project.md
-```
-
-文件会按照文件名排序。建议保留补零编号，例如 `01-`、`02-`、`48-`，以明确控制作品顺序和项目编号。
-
-推荐模板：
-
-```markdown
----
-title: My Project
-subtitle: Project Subtitle
-project-date: 2026/08
-category: SHORT FILM, COMMERCIAL
-role-description: Director, Editor
-act-as:
-watch-url: https://www.youtube.com/watch?v=VIDEO_ID
-image: /assets/projects/my-project.jpg
-alt: My Project cover
-client: Independent
-description: A short description of the project.
-duration: 05:30
-format: 4K
-color: Color
-language: English
-accent: #ff6a3d
-surface: #f7ead8
----
-```
-
-也可以把较长的介绍写在第二个 `---` 后面。当 `description` 为空时，这段正文会作为项目描述：
-
-```markdown
----
-title: My Project
-project-date: 2026/08
-category: SHORT FILM
-image: /assets/projects/my-project.jpg
----
-This is a longer project description.
-```
-
-### 3. 字段说明
-
-| 字段 | 用途 |
-| --- | --- |
-| `title` | 作品主标题 |
-| `subtitle` | 副标题 |
-| `project-date` | 项目日期 |
-| `category` | 分类；多个分类使用英文逗号分隔 |
-| `role-description` | 在项目中的职责 |
-| `act-as` | 角色资料；目前会载入数据，但界面暂未显示 |
-| `watch-url` | 观看地址和详情中的嵌入媒体 |
-| `image` | 封面和无视频时的详情图片 |
-| `alt` | 图片替代文字 |
-| `client` | 客户名称 |
-| `description` | 项目介绍，仅支持单行 |
-| `duration` | 时长 |
-| `format` | 画面或交付格式 |
-| `color` | 彩色或黑白等信息 |
-| `language` | 语言 |
-| `accent` | 单张作品卡的强调色 |
-| `surface` | 单张作品卡的浅色背景 |
-
-`watch-url` 会自动识别以下地址：
-
-- Google Drive 文件和文件夹
-- YouTube 标准链接和 `youtu.be` 短链接
-- Instagram Reel
-- `xhslink.com`
-
-其他网站如果禁止 iframe 嵌入，详情中的播放器可能无法显示；这时应使用平台提供的直接嵌入地址，或只保留外部观看链接。
-
-### Frontmatter 限制
-
-当前项目使用轻量级解析器，不是完整 YAML 解析器：
-
-- 每个字段必须独占一行。
-- 不支持数组、嵌套对象和多行 YAML 值。
-- 通常不需要给值加引号；引号会被当成内容的一部分。
-- Markdown 正文目前会作为纯文字描述显示，不会渲染成富文本 HTML。
-
-如果作品没有配置 `image`，组件会尝试读取 `/assets/projects/default.svg`。因此应为每个作品填写 `image`，或者自行创建 `public/assets/projects/default.svg` 作为统一占位图。
 
 ## 修改颜色和滚动长度
 
@@ -328,9 +222,7 @@ my-portfolio/
 ├─ src/
 │  ├─ components/
 │  ├─ data/
-│  │  ├─ projects/
 │  │  ├─ profile.js
-│  │  ├─ projects.js
 │  │  └─ siteConfig.js
 │  ├─ three/
 │  ├─ App.vue
