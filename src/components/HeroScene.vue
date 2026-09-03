@@ -2,6 +2,7 @@
 import { computed, onBeforeUnmount, onMounted, ref } from 'vue'
 import { createPortfolioScene } from '../three/createPortfolioScene'
 import AboutSection from './AboutSection.vue'
+import { siteConfig } from '../data/siteConfig'
 
 const emit = defineEmits(['progress-end-change'])
 
@@ -218,9 +219,9 @@ onBeforeUnmount(() => {
       </div>
 
       <div class="hero-title" :style="titleStyle">
-        <p>Selected films · 2023—2026</p>
-        <h1 class="sr-only">Film director portfolio</h1>
-        <strong>Shearmine</strong>
+        <p>{{ siteConfig.hero.subtitle }}</p>
+        <h1 class="sr-only">{{ siteConfig.hero.srHeading }}</h1>
+        <strong>{{ siteConfig.hero.name }}</strong>
       </div>
 
       <div

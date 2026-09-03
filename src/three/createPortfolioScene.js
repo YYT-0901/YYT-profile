@@ -11,7 +11,7 @@ const terrainHeight = (x, z) => {
   const undulation = Math.sin(x * 0.38) * 0.16 + Math.cos(z * 0.31) * 0.12
   const detail = Math.sin((x + z) * 0.7) * 0.06
 
-  return centerHill + foregroundHill + undulation + detail - 0.2
+  return centerHill + foregroundHill + undulation + detail
 }
 
 const createRandom = (initialSeed) => {

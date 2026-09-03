@@ -2,9 +2,11 @@
 import { computed, ref, onMounted, onBeforeUnmount } from 'vue'
 import AboutSection from './components/AboutSection.vue'
 import HeroScene from './components/HeroScene.vue'
-import ProjectCard from './components/ProjectCard.vue'
 import { loadAllProjects } from './data/projects'
 import { siteConfig } from './data/siteConfig'
+import { profile } from './data/profile'
+import GithubRepos from './components/GithubRepos.vue'
+import DevToBlog from './components/DevToBlog.vue'
 
 const selectedCategory = ref('All')
 const navHasBackground = ref(false)
@@ -87,51 +89,32 @@ onBeforeUnmount(() => {
         <a href="#top">{{ siteConfig.nav.home }}</a>
         <a href="#about">{{ siteConfig.nav.about }}</a>
         <a href="#portfolio">{{ siteConfig.nav.portfolio }}</a>
+        <a href="#blog">{{ siteConfig.nav.blog }}</a>
       </nav>
+
+      <a class="download" :href="profile.resume" download>
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" aria-hidden="true" focusable="false">
+          <path
+            fill="currentColor"
+            d="M.5 9.5a.5.5 0 0 1 .5.5v2a1.5 1.5 0 0 0 1.5 1.5h11A1.5 1.5 0 0 0 15 12.5v-2a.5.5 0 0 1 1 0v2A2.5 2.5 0 0 1 13.5 15h-11A2.5 2.5 0 0 1 0 12.5v-2a.5.5 0 0 1 .5-.5zm6.35-7.2a.5.5 0 0 1 .7 0l3 3a.5.5 0 0 1-.7.7L8.5 4.21V11a.5.5 0 0 1-1 0V4.21L5.15 6.99a.5.5 0 1 1-.7-.7l3-3z"
+          />
+        </svg>
+        <span>Download Resume</span>
+      </a>
     </header>
 
     <main class="portfolio-page">
       <HeroScene @progress-end-change="navHasBackground = $event" />
 
-      <section id="portfolio" class="work-section section-shell">
-        <div class="section-heading">
-          <div>
-            <span class="section-index">{{ siteConfig.portfolio.kicker }}</span>
-            <h2>{{ siteConfig.portfolio.titleLine1 }}<br />{{ siteConfig.portfolio.titleLine2Start }} <em>{{ siteConfig.portfolio.titleLine2Em }}</em></h2>
-          </div>
-          <p>{{ siteConfig.portfolio.description }}</p>
-        </div>
+      <GithubRepos :username="profile.githubUsername" />
 
-        <div class="project-filter" aria-label="Project categories">
-          <button
-            v-for="category in categoryOptions"
-            :key="category"
-            type="button"
-            class="project-filter__button"
-            :class="{ 'is-active': selectedCategory === category }"
-            @click="selectedCategory = category"
-          >
-            {{ category }}
-          </button>
-        </div>
+      <!-- 分割线 -->
+      <div class="divider"></div>
 
-        <div class="projects-grid">
-          <template v-if="!allProjects.length && loadingProjects">
-            <p>Loading projects…</p>
-          </template>
-
-          <template v-else>
-            <ProjectCard v-for="project in paginatedProjects" :key="project['modal-id']" :project="project" />
-          </template>
-        </div>
-
-        <div class="pagination" v-if="allProjects.length">
-          <button type="button" :disabled="currentPage === 1" @click="goToPage(currentPage - 1)">Prev</button>
-          <span>{{ currentPage }} / {{ totalPages }}</span>
-          <button type="button" :disabled="currentPage === totalPages" @click="goToPage(currentPage + 1)">Next</button>
-        </div>
-      </section>
+      <DevToBlog :username="profile.devCommunityUsername" />
     </main>
+
+    <div class="divider"></div>
 
     <footer>
       <span>{{ siteConfig.footer.copyright }}</span>
@@ -139,3 +122,28 @@ onBeforeUnmount(() => {
     </footer>
   </div>
 </template>
+
+<style scoped>
+.download {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 18px;
+  border: 1px solid rgba(255, 255, 255, 0.9);
+  border-radius: 999px;
+  color: white;
+  text-decoration: none;
+  transition: opacity 180ms ease, transform 180ms ease;
+}
+
+.download:hover,
+.download:focus-visible {
+  opacity: 0.9;
+  transform: translateY(-1px);
+}
+
+.download svg {
+  display: block;
+  flex-shrink: 0;
+}
+</style>

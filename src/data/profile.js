@@ -1,14 +1,17 @@
 export const profile = {
   image: '/assets/avatar.jpg',
-  name: 'Shearmine',
-  role: 'Almighty Goddess',
+  name: 'Yi Txuan',
+  role: 'Java Developer',
   location: 'Kuala Lumpur, Malaysia',
-  email: 'lwying13@gmail.com',
-  phone: '+6019-4867311',
+  email: 'yitxuanyou506',
+  phone: '+6016-4197498',
   availability: 'Available for selected productions',
   intro:
-    'I’m a creative who works across video, photography, marketing, and theatre. With a background in Drama & Visuals, I’m interested in how visual elements can shape the way a story is told.',
+    'a Computer Science and Technology student at Beijing Institute of Technology.',
   approach:
-    'Whether I’m behind the camera, in the editing room, or working on a production, I enjoy being part of the process from idea to final piece. I’m always looking for new stories to tell and new ways to bring them to life.',
-  disciplines: ['Producer', 'Director', 'Scriptwriter', 'Sound Mixer'],
+    'I’m passionate about technology and enjoy exploring new ideas in computer science. Outside of my studies, I love singing and playing badminton, which help me relax and stay active.',
+  disciplines: ['Java', 'Spring Boot & Spring Cloud', 'MySQL & Redis', 'HTML + CSS + JavaScript'],
+  githubUsername: 'YYT-0901',
+  devCommunityUsername: 'yyt0901',
+  resume: '/assets/resume/resume.pdf',
 }

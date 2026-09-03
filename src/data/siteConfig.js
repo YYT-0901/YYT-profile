@@ -1,13 +1,14 @@
 export const siteConfig = {
   brand: {
-    short: 'LWY',
-    tagline: '李宛盈',
-    homeLabel: 'Producer - Director - Scriptwriter - Sound Mixer - Editor',
+    short: 'YYT',
+    tagline: 'YOU YI TXUAN',
+    homeLabel: 'Backend - Database - Frontend - Test - Deploy',
   },
   nav: {
     home: 'Home',
     about: 'About',
     portfolio: 'Portfolio',
+    blog: 'Blog',
   },
   portfolio: {
     kicker: 'SELECTED WORK',
@@ -19,6 +20,11 @@ export const siteConfig = {
     loadMore: 'Load more',
     archiveKicker: 'ARCHIVE',
     archiveTitle: 'All projects',
+  },
+  hero: {
+    subtitle: '2023—2026',
+    srHeading: 'portfolio',
+    name: 'Carson',
   },
   about: {
     kicker: 'THE STORY SO FAR',
@@ -48,7 +54,7 @@ export const siteConfig = {
     },
   },
   footer: {
-    copyright: 'SHEARMINE © 2026',
+    copyright: 'YOU YI TXUAN © 2026',
     backToTop: 'Back to top ↑',
   },
 }
