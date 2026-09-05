@@ -228,6 +228,62 @@ body.project-drawer-open .site-nav {
   transform-origin: left;
 }
 
+/* Mobile sidebar / toggle */
+.mobile-toggle {
+  display: none;
+  background: transparent;
+  border: 1px solid rgba(255,255,255,0.12);
+  padding: 8px;
+  border-radius: 8px;
+  color: var(--on-dark);
+}
+
+.mobile-sidebar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 100vh;
+  width: min(320px, 85%);
+  background: linear-gradient(180deg, var(--blue-dark), var(--blue));
+  color: var(--on-dark);
+  z-index: 60;
+  transform: translateX(-110%);
+  transition: transform 240ms cubic-bezier(.2,.9,.2,1);
+  padding: 72px 18px 24px 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.mobile-sidebar.open {
+  transform: translateX(0);
+}
+
+.mobile-sidebar nav {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  font-weight: 800;
+}
+
+.sidebar-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgb(0 0 0 / 48%);
+  z-index: 55;
+}
+
+body.mobile-drawer-open {
+  overflow: hidden;
+}
+
+/* Responsive behavior: hide desktop nav and show toggle on smaller screens */
+@media (max-width: 820px) {
+  .site-nav nav { display: none; }
+  .mobile-toggle { display: inline-flex; align-items: center; gap: 8px; }
+  .site-nav .header-download { display: none; }
+}
+
 .hero-title {
   position: absolute;
   z-index: 2;

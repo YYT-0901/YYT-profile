@@ -9,6 +9,7 @@ import DevToBlog from './components/DevToBlog.vue'
 
 const selectedCategory = ref('All')
 const navHasBackground = ref(false)
+const sidebarOpen = ref(false)
 
 const allProjects = ref([])
 const loadingProjects = ref(false)
@@ -52,6 +53,19 @@ function goToPage(page) {
   currentPage.value = Math.min(Math.max(1, page), totalPages.value)
   window.scrollTo({ top: document.getElementById('portfolio').offsetTop - 80, behavior: 'smooth' })
 }
+
+function toggleSidebar() {
+  sidebarOpen.value = !sidebarOpen.value
+  document.body.classList.toggle('mobile-drawer-open', sidebarOpen.value)
+}
+
+onMounted(() => {
+  const onKey = (e) => {
+    if (e.key === 'Escape' && sidebarOpen.value) toggleSidebar()
+  }
+  window.addEventListener('keydown', onKey)
+  onBeforeUnmount(() => window.removeEventListener('keydown', onKey))
+})
 </script>
 
 <template>
@@ -68,7 +82,19 @@ function goToPage(page) {
         <a href="#blog">{{ siteConfig.nav.blog }}</a>
       </nav>
 
-      <a class="download" :href="profile.resume" download>
+      <button
+        class="mobile-toggle"
+        aria-controls="mobile-sidebar"
+        :aria-expanded="String(sidebarOpen)"
+        @click="toggleSidebar"
+        aria-label="Open navigation menu"
+      >
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+          <path stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" d="M3 6h18M3 12h18M3 18h18" />
+        </svg>
+      </button>
+
+      <a class="header-download" :href="profile.resume" download>
         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" aria-hidden="true" focusable="false">
           <path
             fill="currentColor"
@@ -78,6 +104,27 @@ function goToPage(page) {
         <span>Download Resume</span>
       </a>
     </header>
+
+    <!-- Mobile sidebar + backdrop -->
+    <aside id="mobile-sidebar" class="mobile-sidebar" :class="{ open: sidebarOpen }" aria-hidden="false">
+      <nav aria-label="Mobile primary navigation">
+        <a href="#top" @click="toggleSidebar">{{ siteConfig.nav.home }}</a>
+        <a href="#about" @click="toggleSidebar">{{ siteConfig.nav.about }}</a>
+        <a href="#portfolio" @click="toggleSidebar">{{ siteConfig.nav.portfolio }}</a>
+        <a href="#blog" @click="toggleSidebar">{{ siteConfig.nav.blog }}</a>
+        <a class="download" :href="profile.resume" download @click="toggleSidebar">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" aria-hidden="true" focusable="false">
+            <path
+              fill="currentColor"
+              d="M.5 9.5a.5.5 0 0 1 .5.5v2a1.5 1.5 0 0 0 1.5 1.5h11A1.5 1.5 0 0 0 15 12.5v-2a.5.5 0 0 1 1 0v2A2.5 2.5 0 0 1 13.5 15h-11A2.5 2.5 0 0 1 0 12.5v-2a.5.5 0 0 1 .5-.5zm6.35-7.2a.5.5 0 0 1 .7 0l3 3a.5.5 0 0 1-.7.7L8.5 4.21V11a.5.5 0 0 1-1 0V4.21L5.15 6.99a.5.5 0 1 1-.7-.7l3-3z"
+            />
+          </svg>
+          <span>Download Resume</span>
+        </a>
+      </nav>
+    </aside>
+
+    <div class="sidebar-backdrop" v-if="sidebarOpen" @click="toggleSidebar" tabindex="-1" aria-hidden="true"></div>
 
     <main class="portfolio-page">
       <HeroScene @progress-end-change="navHasBackground = $event" />
@@ -121,5 +168,12 @@ function goToPage(page) {
 .download svg {
   display: block;
   flex-shrink: 0;
+}
+
+@media (max-width: 820px) {
+  /* Ensure header-level download button is hidden on small screens */
+  .header-download {
+    display: none;
+  }
 }
 </style>
