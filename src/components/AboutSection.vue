@@ -1,5 +1,6 @@
 <script setup>
 import { nextTick, onBeforeUnmount, onMounted, ref } from 'vue'
+const props = defineProps({ isMobile: { type: Boolean, default: false } })
 import { profile } from '../data/profile'
 import { siteConfig } from '../data/siteConfig'
 import { createBadgeScene, createPhoneScene } from '../three/createAboutObjects'
@@ -21,6 +22,7 @@ const badgePanel = ref(null)
 const BADGE_ORIGIN_VERTICAL_OFFSET = 0.15
 
 const syncBadgeStagePosition = () => {
+  if (props.isMobile) return
   if (!section.value || !badgePanel.value) return
 
   const sectionRect = section.value.getBoundingClientRect()
@@ -50,40 +52,42 @@ const togglePhone = () => {
 onMounted(async () => {
   await nextTick()
 
-  if (!badgeCanvas.value || !phoneCanvas.value) {
-    console.error('WebGL canvas refs are not ready.', {
-      badgeCanvas: badgeCanvas.value,
-      phoneCanvas: phoneCanvas.value,
-    })
+  if (!phoneCanvas.value) {
+    console.error('Phone canvas ref is not ready.', { phoneCanvas: phoneCanvas.value })
     return
   }
 
-  try {
     try {
-      badgeScene = await createBadgeScene(badgeCanvas.value, profile)
+      if (!props.isMobile) {
+        try {
+          badgeScene = await createBadgeScene(badgeCanvas.value, profile)
+        } catch (error) {
+          console.error('Unable to initialize the badge scene.', error)
+          badgeScene = null
+        }
+      }
+
+      phoneScene = createPhoneScene(phoneCanvas.value, profile)
+
+      if (!props.isMobile) {
+        badgeResizeObserver = new ResizeObserver(syncBadgeStagePosition)
+        badgeResizeObserver.observe(badgePanel.value)
+        window.addEventListener('resize', syncBadgeStagePosition)
+        syncBadgeStagePosition()
+      }
+
+      phoneResizeObserver = new ResizeObserver(() => phoneScene?.resize())
+      phoneResizeObserver.observe(phoneCanvas.value)
     } catch (error) {
-      console.error('Unable to initialize the badge scene.', error)
-      badgeScene = null
+      console.error('Unable to initialize the About 3D objects.', error)
+      webglFailed.value = true
     }
-
-    phoneScene = createPhoneScene(phoneCanvas.value, profile)
-    badgeResizeObserver = new ResizeObserver(syncBadgeStagePosition)
-    phoneResizeObserver = new ResizeObserver(() => phoneScene?.resize())
-    badgeResizeObserver.observe(badgePanel.value)
-    phoneResizeObserver.observe(phoneCanvas.value)
-
-    window.addEventListener('resize', syncBadgeStagePosition)
-    syncBadgeStagePosition()
-  } catch (error) {
-    console.error('Unable to initialize the About 3D objects.', error)
-    webglFailed.value = true
-  }
 
   sectionObserver = new IntersectionObserver(
     ([entry]) => {
       if (!entry.isIntersecting || hasEntered.value) return
       hasEntered.value = true
-      badgeScene?.setActive(true)
+      if (!props.isMobile) badgeScene?.setActive(true)
       sectionObserver?.disconnect()
     },
     { threshold: 0.24 },
@@ -97,7 +101,7 @@ onBeforeUnmount(() => {
   sectionObserver?.disconnect()
   badgeResizeObserver?.disconnect()
   phoneResizeObserver?.disconnect()
-  badgeScene?.dispose()
+  if (!props.isMobile) badgeScene?.dispose()
   phoneScene?.dispose()
   window.removeEventListener('resize', syncBadgeStagePosition)
 })
@@ -109,14 +113,14 @@ onBeforeUnmount(() => {
     id="about"
     ref="section"
     class="about-section"
-    :class="{ 'has-entered': hasEntered }"
+    :class="{ 'has-entered': hasEntered, 'no-badge': props.isMobile }"
     aria-labelledby="about-title"
   >
     <div class="about-kicker" aria-hidden="true">
     </div>
 
 
-    <div class="badge-stage">
+    <div v-if="!props.isMobile" class="badge-stage">
       <canvas
         ref="badgeCanvas"
         class="about-webgl badge-webgl"
@@ -125,7 +129,7 @@ onBeforeUnmount(() => {
 
 
     <div class="comic-layout">
-      <article ref="badgePanel" class="comic-panel badge-panel" aria-label="Director identification badge">
+      <article v-if="!props.isMobile" ref="badgePanel" class="comic-panel badge-panel" aria-label="Director identification badge">
         <div class="badge-panel__comic" aria-hidden="true">
           <div class="comic-speed-lines"></div>
         </div>

@@ -227,6 +227,8 @@ export const createBadgeScene = async (canvas, profile) => {
 
   root.add(hangingGroup)
   scene.add(root)
+  // allow responsive scaling of the whole badge group
+  root.scale.setScalar(1)
 
   const strapMaterial = new THREE.MeshStandardMaterial({ color: '#0b0b0c', roughness: 0.72 })
   const metalMaterial = new THREE.MeshStandardMaterial({
@@ -333,6 +335,12 @@ export const createBadgeScene = async (canvas, profile) => {
       camera.position.x + (screenX / width - 0.5) * worldSize.width,
       camera.position.y + (0.5 - screenY / height) * worldSize.height,
     )
+
+    // Responsive scale: scale the root group so the badge visually fits smaller canvases
+    // baseWidth chosen to match intended design size; clamp to reasonable bounds
+    const baseWidth = 420
+    const scale = Math.max(0.55, Math.min(1.0, width / baseWidth))
+    root.scale.setScalar(scale)
   }
 
   const getVisibleWorldSize = () => {
@@ -451,7 +459,8 @@ export const createBadgeScene = async (canvas, profile) => {
   window.addEventListener('pointermove', onPointerMove, pointerListenerOptions)
   window.addEventListener('pointerup', endDrag, pointerListenerOptions)
   window.addEventListener('pointercancel', endDrag, pointerListenerOptions)
-  window.addEventListener('touchmove', preventTouchScroll, pointerListenerOptions)
+  // Attach touchmove to the canvas only so global scrolling isn't blocked
+  canvas.addEventListener('touchmove', preventTouchScroll, pointerListenerOptions)
   window.addEventListener('blur', endDrag)
 
   const simulateBadge = (deltaTime) => {
@@ -575,7 +584,7 @@ export const createBadgeScene = async (canvas, profile) => {
       pointerListenerOptions,
     )
 
-    window.removeEventListener(
+    canvas.removeEventListener(
       'touchmove',
       preventTouchScroll,
       pointerListenerOptions,

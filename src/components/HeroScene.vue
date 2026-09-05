@@ -5,6 +5,10 @@ import AboutSection from './AboutSection.vue'
 import { siteConfig } from '../data/siteConfig'
 
 const emit = defineEmits(['progress-end-change'])
+const props = defineProps({
+  renderAboutInHero: { type: Boolean, default: true },
+  isMobile: { type: Boolean, default: false },
+})
 
 const hero = ref(null)
 const canvas = ref(null)
@@ -225,10 +229,11 @@ onBeforeUnmount(() => {
       </div>
 
       <div
+        v-if="props.renderAboutInHero"
         class="hero-about-layer"
         :style="aboutStyle"
       >
-        <AboutSection />
+        <AboutSection :is-mobile="props.isMobile" />
       </div>
 
       <div class="scroll-cue" :style="cueStyle" aria-hidden="true">

@@ -10,6 +10,22 @@ import DevToBlog from './components/DevToBlog.vue'
 const selectedCategory = ref('All')
 const navHasBackground = ref(false)
 const sidebarOpen = ref(false)
+const isMobile = ref(false)
+
+const updateIsMobile = () => {
+  isMobile.value = window.matchMedia('(max-width: 820px)').matches
+}
+
+onMounted(() => {
+  updateIsMobile()
+  const mq = window.matchMedia('(max-width: 820px)')
+  mq.addEventListener?.('change', updateIsMobile)
+  window.addEventListener('resize', updateIsMobile)
+  onBeforeUnmount(() => {
+    mq.removeEventListener?.('change', updateIsMobile)
+    window.removeEventListener('resize', updateIsMobile)
+  })
+})
 
 const allProjects = ref([])
 const loadingProjects = ref(false)
@@ -127,7 +143,9 @@ onMounted(() => {
     <div class="sidebar-backdrop" v-if="sidebarOpen" @click="toggleSidebar" tabindex="-1" aria-hidden="true"></div>
 
     <main class="portfolio-page">
-      <HeroScene @progress-end-change="navHasBackground = $event" />
+      <HeroScene :render-about-in-hero="!isMobile" :is-mobile="isMobile" @progress-end-change="navHasBackground = $event" />
+
+      <AboutSection v-if="isMobile" :is-mobile="isMobile" />
 
       <GithubRepos :username="profile.githubUsername" />
 
@@ -147,7 +165,19 @@ onMounted(() => {
 </template>
 
 <style scoped>
-.download {
+.download  {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 18px;
+  border: 1px solid rgba(255, 255, 255, 0.9);
+  border-radius: 999px;
+  color: white;
+  text-decoration: none;
+  transition: opacity 180ms ease, transform 180ms ease;
+}
+
+.header-download {
   display: inline-flex;
   align-items: center;
   gap: 8px;
