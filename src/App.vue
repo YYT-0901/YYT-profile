@@ -2,7 +2,6 @@
 import { computed, ref, onMounted, onBeforeUnmount } from 'vue'
 import AboutSection from './components/AboutSection.vue'
 import HeroScene from './components/HeroScene.vue'
-import { loadAllProjects } from './data/projects'
 import { siteConfig } from './data/siteConfig'
 import { profile } from './data/profile'
 import GithubRepos from './components/GithubRepos.vue'
@@ -53,29 +52,6 @@ function goToPage(page) {
   currentPage.value = Math.min(Math.max(1, page), totalPages.value)
   window.scrollTo({ top: document.getElementById('portfolio').offsetTop - 80, behavior: 'smooth' })
 }
-
-let io = null
-onMounted(() => {
-  const section = document.getElementById('portfolio')
-  if (!section) return
-
-  io = new IntersectionObserver(async (entries) => {
-    for (const entry of entries) {
-      if (entry.isIntersecting && !allProjects.value.length && !loadingProjects.value) {
-        loadingProjects.value = true
-        const loaded = await loadAllProjects()
-        allProjects.value = loaded
-        loadingProjects.value = false
-      }
-    }
-  }, { root: null, threshold: 0.1 })
-
-  io.observe(section)
-})
-
-onBeforeUnmount(() => {
-  if (io) io.disconnect()
-})
 </script>
 
 <template>
