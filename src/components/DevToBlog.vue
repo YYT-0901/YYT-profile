@@ -303,18 +303,20 @@ const visiblePosts = computed(() => {
   margin: 0 0 12px;
 }
 
-.blog-grid {
+  .blog-grid {
   display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: clamp(20px, 3vw, 32px);
-  margin-top: 24px;
+  grid-template-columns: 1fr;
+  gap: clamp(14px, 2.4vw, 20px);
+  margin-top: 18px;
 }
 
 .post-card {
   --accent: var(--blue);
 
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
+  align-items: stretch;
+  gap: 20px;
   overflow: hidden;
   border: 2px solid var(--ink);
   border-radius: 14px;
@@ -331,17 +333,23 @@ const visiblePosts = computed(() => {
 }
 
 .post-card__cover {
-  height: 150px;
+  width: 220px;
+  min-width: 140px;
+  height: auto;
   background-position: center;
   background-size: cover;
-  border-bottom: 2px solid var(--ink);
+  border-right: 2px solid var(--ink);
+  border-bottom: 0;
+  border-radius: 10px 0 0 10px;
+  flex-shrink: 0;
 }
 
 .post-card__body {
   display: flex;
   flex-direction: column;
   gap: 10px;
-  padding: 20px;
+  padding: 18px 20px;
+  flex: 1 1 auto;
 }
 
 .post-card__top {
@@ -502,5 +510,7 @@ const visiblePosts = computed(() => {
 
 @media (max-width: 600px) {
   .blog-summary { gap: 20px; }
+  .post-card { flex-direction: column; }
+  .post-card__cover { width: 100%; height: 150px; border-right: 0; border-radius: 12px 12px 0 0; }
 }
 </style>
